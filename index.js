@@ -24,7 +24,9 @@ mongoose
     console.log('MongoDB disconnected ❌');
   }
 });
-const studentAPI = require('./routes/student.route')
+const caseRoute = require('./routes/case.route')
+const userRoute = require('./routes/user.route')
+const judgeRoute = require('./routes/judge.route')
 const app = express()
 app.use(bodyParser.json())
 app.use(
@@ -35,12 +37,15 @@ app.use(
 app.use(cors())
 
 // API
-app.use('/api', studentAPI)
+app.use('/api', caseRoute)
+app.use('/api', userRoute)
+app.use('/api', judgeRoute)
 
 // Create port
 const port = process.env.PORT || 4000
 const server = app.listen(port, () => {
   console.log('Connected to port ' + port)
+  
 })
 
 // Find 404
