@@ -27,35 +27,38 @@ mongoose
 const caseRoute = require('./routes/case.route')
 const userRoute = require('./routes/user.route')
 const judgeRoute = require('./routes/judge.route')
-const app = express()
+const app = express();
+
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+app.use(cors())
 app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
     extended: false,
   }),
 )
-app.use(cors())
 
-// API
 app.use('/api', caseRoute)
 app.use('/api', userRoute)
 app.use('/api', judgeRoute)
 
-// Create port
-const port = process.env.PORT || 4000
-const server = app.listen(port, () => {
-  console.log('Connected to port ' + port)
-  
-})
+//  required middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// Find 404
-app.use((req, res, next) => {
-  next(createError(404))
-})
+const port = parseInt(process.env.PORT, 10) || 4000;
 
-// error handler
-app.use(function (err, req, res, next) {
-  console.error(err.message)
-  if (!err.statusCode) err.statusCode = 500
-  res.status(err.statusCode).send(err.message)
-})
+// port listening
+app.listen(port, () => {
+  try {
+    console.log(`Server is running on port: ${port}`);
+  } catch (error) {
+    console.error('error is here', error);
+  }
+});
